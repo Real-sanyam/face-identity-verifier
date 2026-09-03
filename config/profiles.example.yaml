@@ -1,0 +1,24 @@
+# List ONLY your own accounts/posts here. Copy this file to profiles.yaml
+# and edit it with your real handles/URLs before running the pipeline.
+#
+# `twitter` uses the official X/Twitter v2 API to search up to 100 recent
+# photo posts from each listed account. A verified result is a live post
+# discovery candidate and can continue to the blockchain stage.
+
+github:
+  - yourhandle
+
+twitter:
+  # requires TWITTER_BEARER_TOKEN in .env
+  - yourhandle
+
+# Optional comparison-only images. These are useful for checking a known post,
+# but are deliberately not treated as a live discovery result and will not on
+# their own trigger the blockchain stage. Use SERPAPI_KEY for live discovery on
+# Instagram, Facebook, TikTok, and other supported search results.
+direct_images:
+  - url: "https://example.com/path/to/your_own_post_image.jpg"
+    platform: "instagram"
+    source_url: "https://instagram.com/p/your_post_id"
+    title: "Optional local label; only its SHA-256 is recorded"
+    published_at: "2026-01-01T00:00:00Z"
