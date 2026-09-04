@@ -12,6 +12,11 @@ from pathlib import Path
 from dotenv import load_dotenv, set_key
 from web3 import Web3
 
+import sys
+
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from src.blockchain import load_account  # noqa: E402
+
 ARTIFACT_PATH = Path(__file__).parent.parent / "artifacts" / "HashRegistry.json"
 ENV_PATH = Path(__file__).parent.parent / ".env"
 SEPOLIA_CHAIN_ID = 11155111
@@ -37,7 +42,7 @@ def main():
         raise FileNotFoundError("Contract artifact not found. Run `python contracts/compile.py` first.")
 
     artifact = json.loads(ARTIFACT_PATH.read_text())
-    account = w3.eth.account.from_key(private_key)
+    account = load_account(w3, private_key)
 
     contract = w3.eth.contract(abi=artifact["abi"], bytecode=artifact["bytecode"])
     tx = contract.constructor().build_transaction(

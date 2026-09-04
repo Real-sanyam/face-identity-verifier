@@ -67,7 +67,7 @@ def register_hash(data_hash_hex: str, metadata_uri: str) -> str:
     private_key = os.getenv("WALLET_PRIVATE_KEY")
     if not private_key:
         raise EnvironmentError("WALLET_PRIVATE_KEY is not set in the environment (.env).")
-    account = w3.eth.account.from_key(private_key)
+    account = load_account(w3, private_key)
 
     data_hash_bytes = _parse_hash(data_hash_hex)
 
@@ -113,3 +113,14 @@ def _parse_hash(data_hash_hex: str) -> bytes:
     if len(raw_hash) != 32:
         raise ValueError("Data hash must be exactly 32 bytes (64 hexadecimal characters).")
     return raw_hash
+
+
+def load_account(w3: Web3, private_key: str):
+    """Load a 32-byte key with an actionable error for pasted addresses."""
+    try:
+        return w3.eth.account.from_key(private_key)
+    except (ValueError, TypeError) as exc:
+        raise ValueError(
+            "WALLET_PRIVATE_KEY must be a 32-byte private key (0x + 64 hex characters), "
+            "not a 20-byte wallet address. Keep it in .env and never paste it into chat."
+        ) from exc
